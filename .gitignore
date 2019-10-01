@@ -1,6 +1,11 @@
 # PHPStorm files.
 /.idea
 
+# Build Files.
+/dist
+/build
+/*.egg-info
+
 # Env Vars
 .env
 
