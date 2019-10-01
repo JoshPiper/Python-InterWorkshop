@@ -1,0 +1,10 @@
+# PHPStorm files.
+/.idea
+
+# Env Vars
+.env
+
+# Random data files.
+*.zip
+*.db
+report*.txt
