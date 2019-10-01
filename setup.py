@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='InterWorkshop',
-    version='1.0.0',
+    version='1.0.0.dev1',
     packages=['gmad', 'workshop'],
     url='doctor-internet.dev',
     license='MIT',
