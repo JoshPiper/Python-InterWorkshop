@@ -31,6 +31,14 @@ with env.prefixed("STEAM_"):
 
 
 def search(text="", app=4000, perpage=20, cursor="*"):
+    """
+    Search the workshop with a given search text and app, returning X results per page, after cursor.
+    :param text: The text to search for.
+    :param app: The AppID to search for.
+    :param perpage: Number of results per page, defaults to 20.
+    :param cursor: The active cursor. Returned from results.
+    :return: Iterator
+    """
     while cursor:
         print("Cursor: {}".format(cursor))
         resp = get(
