@@ -78,6 +78,11 @@ def search(text="", app=4000, perpage=20, cursor="*"):
 
 
 def query(file):
+    """
+    Query a single file from the workshop.
+    :param file: string The FileID to query.
+    :return: object
+    """
     resp = post(
         url=api_url('ISteamRemoteStorage', 'GetPublishedFileDetails'),
         data={
@@ -87,7 +92,7 @@ def query(file):
 
     try:
         resp = resp.json()['response']
-    except Exception:
+    except JSONDecodeError:
         print(resp.headers)
         print(resp.text)
         exit(1)
