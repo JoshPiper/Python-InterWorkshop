@@ -28,10 +28,17 @@ class BaseAPIService:
         )
 
     def query(self, method, path, query={}, params={}):
-        return request(method, self.build(path, query, params))
+        res = request(method, self.build(path, query, params))
+        if res.status_code == 403:
+            raise APIException('Status Code 403 returned. Check API key.')
+
+        if res.status_code == 400:
+            raise APIException('Client Error: %s' % res.text)
+
+        return res
 
     def authquery(self, method, path, query={}, params={}):
-        return query(self, method, path, query, params)
+        return self.query(self, method, path, query, params)
 
     def __getattr__(self, item):
         if item in self.methods:
