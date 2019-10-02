@@ -24,7 +24,14 @@ class BaseAPIService:
 
     def build(self, path, query={}, params={}):
         return urlunparse(
-            (self.scheme, self.host(), path, urlencode(params), urlencode(query), '')
+            (
+                self.scheme,
+                self.host(),
+                path,
+                urlencode(params),
+                urlencode(query),
+                ''
+            )
         )
 
     def query(self, method, path, query={}, params={}):
