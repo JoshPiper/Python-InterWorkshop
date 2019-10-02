@@ -24,9 +24,9 @@ def api_url(service: str = "IPublishedFileService",
     )
 
 
-# with env.prefixed("STEAM_"):
-    # key = env.str("API_KEY")
-    # blacklist = set(env.list("BLACKLIST"))
+with env.prefixed("STEAM_"):
+    key = env.str("API_KEY")
+    blacklist = set(env.list("BLACKLIST"))
 
 
 def search(text="", app=4000, perpage=20, cursor="*"):
