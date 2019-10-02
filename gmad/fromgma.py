@@ -40,7 +40,10 @@ def get_header(in_path):
 
 
 def extract_header(in_path):
-    """Extracts the gma header, closing the file and returning the information."""
+    """
+    Extracts the gma header,
+    closing the file and returning the information.
+    """
     header, file = get_header(in_path)
     file.close()
 
@@ -54,7 +57,10 @@ def extract_gma(in_path, out_path):
     if not path_exists(out_path):
         path_make_directories(out_path)
 
-    """Takes an input path, and output path, and creates a directory from the gma input."""
+    """
+    Takes an input path, and output path,
+    and creates a directory from the gma input.
+    """
     data, file = get_header(
         in_path)  # Call the function. Might as well, keep it dry.
 
