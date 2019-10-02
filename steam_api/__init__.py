@@ -1,4 +1,5 @@
 from functools import partial
+from json import dumps
 
 from api import BaseAPIService, APIException
 
@@ -11,6 +12,7 @@ class BaseSteamAPIService(BaseAPIService):
     defaultVersion = 'v2'
     defaultVerb = 'get'
     autoMethods = {}
+    isService = False
 
     def __init__(self, key):
         self.key = key
@@ -18,6 +20,10 @@ class BaseSteamAPIService(BaseAPIService):
     def __init_subclass__(cls, interface=None, **kwargs):
         if interface is None:
             cls.interface = cls.__name__[:-3]
+        else:
+            cls.interface = interface
+        if cls.interface[-7:] == 'Service':
+            cls.isService = True
 
         for method in cls.autoMethods:
             if 'version' not in cls.autoMethods[method]:
@@ -95,6 +101,8 @@ class BaseSteamAPIService(BaseAPIService):
         for x in data['args']:
             fetch(*x)
 
+        if self.isService:
+            query = {'input_json': dumps(query)}
         res = self.authquery(data['verb'], method, query, data['version'])
 
         if 'datakey' in data:
