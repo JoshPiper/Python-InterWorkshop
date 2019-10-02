@@ -57,8 +57,7 @@ class BaseSteamAPIService(BaseAPIService):
         return super().build(
             '/'.join((self.interface, *method)),
             query,
-            params
-    )
+            params)
 
     def authquery(self, verb, method, query={}, version='v1', params={}):
         if len(query) == 0:
@@ -81,8 +80,8 @@ class BaseSteamAPIService(BaseAPIService):
                                % (arg, method))
         return (arg, value)
 
-    def getargtobj(self, obj, method, args, kwargs, idx, arg, required, default):
-        key, value = self.getarg(method, args, kwargs, idx, arg, required, default)
+    def getargtobj(self, obj, method, args, kwargs, idx, arg, req, default):
+        key, value = self.getarg(method, args, kwargs, idx, arg, req, default)
         if value is not None:
             obj[key] = value
 
