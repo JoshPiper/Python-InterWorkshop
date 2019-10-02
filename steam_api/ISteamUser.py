@@ -42,7 +42,21 @@ class ISteamUserAPI(BaseSteamAPIService):
                 ('steamid', True),
             ),
             'version': 'v3'
+        },
+        'GetPublisherAppOwnershipChanges': {
+            'args': (
+                ('packagerowversion', False, '0'),
+                ('cdkeyrowversion', False, '0'),
+            ),
+            'version': 'v1',
+            'datakey': 'ownershipchanges'
+        },
+        'GetUserGroupList': {
+            'args': (
+                ('steamid', True),
+            ),
+            'version': 'v1',
+            'datakey': 'response'
         }
-
     }
 
