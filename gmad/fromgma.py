@@ -14,6 +14,7 @@ if __name__ == "__main__":
 else:
     import gmad.utils as utils
 
+
 def get_header(in_path):
     """Extracts the gma header from the input file."""
     if not path_exists(in_path):
@@ -37,6 +38,7 @@ def get_header(in_path):
 
     return data, file
 
+
 def extract_header(in_path):
     """Extracts the gma header, closing the file and returning the information."""
     header, file = get_header(in_path)
@@ -45,6 +47,7 @@ def extract_header(in_path):
     header['in_json'] = json_decode(header['info'])
     return header
 
+
 def extract_gma(in_path, out_path):
     if path_exists(out_path):
         rmtree(out_path)
@@ -52,7 +55,8 @@ def extract_gma(in_path, out_path):
         path_make_directories(out_path)
 
     """Takes an input path, and output path, and creates a directory from the gma input."""
-    data, file = get_header(in_path) # Call the function. Might as well, keep it dry.
+    data, file = get_header(
+        in_path)  # Call the function. Might as well, keep it dry.
 
     file_num = 0
     files = []
@@ -69,7 +73,8 @@ def extract_gma(in_path, out_path):
         content = file.read(files[key]["size"])
 
         if crc32(content) != files[key]['crc']:
-            raise IOError("CRC of data from " + files[key]['name'] + " failed to pass CRC.")
+            raise IOError("CRC of data from " + files[key][
+                'name'] + " failed to pass CRC.")
 
         tmp_out_path = path_join(out_path, files[key]['name'])
         if not path_exists(path_get_directory(tmp_out_path)):
@@ -84,21 +89,24 @@ def extract_gma(in_path, out_path):
                 if cset is None:
                     cset = "ascii"
                 # print(tmp_out_path, cset)
-                cnt = cnt.decode(cset, errors = "ignore")
+                cnt = cnt.decode(cset, errors="ignore")
                 cnt = cnt.replace("//", "--")
                 cnt = cnt.replace("/*", "--[[")
                 cnt = cnt.replace("*/", "--]]")
             with open(tmp_out_path, 'w', encoding="utf8") as new_file:
                 new_file.write(cnt)
 
-    with open(path_join(out_path, "addon.json"), 'w', encoding="utf8") as new_file:
+    with open(path_join(out_path, "addon.json"), 'w',
+              encoding="utf8") as new_file:
         new_file.write(data['info'])
 
     file.close()
     return data
 
+
 if __name__ == "__main__":
     import sys
+
     try:
         PATH = sys.argv[1]
         if len(sys.argv) > 2:
