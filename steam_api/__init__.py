@@ -8,6 +8,8 @@ class BaseSteamAPIService(BaseAPIService):
     interface = ''
     key = ''
 
+    defaultVersion = 'v2'
+    defaultVerb = 'get'
     autoMethods = {}
 
     def __init__(self, key):
@@ -16,6 +18,26 @@ class BaseSteamAPIService(BaseAPIService):
     def __init_subclass__(cls, interface=None, **kwargs):
         if interface is None:
             cls.interface = cls.__name__[:-3]
+
+        for method in cls.autoMethods:
+            if 'version' not in cls.autoMethods[method]:
+                cls.autoMethods[method]['version'] = cls.defaultVersion
+
+            if 'verb' not in cls.autoMethods[method]:
+                cls.autoMethods[method]['verb'] = cls.defaultVerb
+
+            args = []
+            for i in range(0, len(cls.autoMethods[method]['args'])):
+                arg = cls.autoMethods[method]['args'][i]
+                if len(arg) == 2:
+                    arg = (i, *arg, None)
+                elif len(arg) == 3:
+                    if isinstance(arg[0], int):
+                        arg = (*arg, None)
+                    else:
+                        arg = (i, *arg)
+                args.append(arg)
+            cls.autoMethods[method]['args'] = tuple(args)
 
     def __getattr__(self, item):
         if item in self.autoMethods:
@@ -52,28 +74,29 @@ class BaseSteamAPIService(BaseAPIService):
         data = self.autoMethods[method]
         query = {}
 
-        for idx, arg, req in data['args']:
-            print(idx, arg, req)
-            value = None
-            if idx is not None and idx in args:
+        for idx, arg, req, default in data['args']:
+            value = default
+            if idx is not None and idx < len(args):
                 value = args[idx]
             if arg is not None and arg in kwargs:
                 value = kwargs[arg]
             if req and value is None:
                 raise APIException("Missing required argument '%s' for '%s'"
                                    % (arg, method))
-            query[arg] = value
+            if value is not None:
+                query[arg] = value
 
-        version = 'v2'
-        if 'version' in data:
-            version = data['version']
-
-        verb = 'get'
-        if 'type' in data:
-            verb = data['type']
-
-        res = self.authquery(verb, method, query, version)
+        res = self.authquery(data['verb'], method, query, data['version'])
         if res.status_code == 403:
             raise APIException('Status Code 403 returned. Check API key.')
 
-        return res.json()
+        if 'datakey' in data:
+            returned = res.json()
+            if isinstance(data['datakey'], str):
+                return returned[data['datakey']]
+
+            for key in data['datakey']:
+                returned = returned[key]
+            return returned
+        else:
+            return res.json()
