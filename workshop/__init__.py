@@ -9,6 +9,22 @@ from json import dumps
 env = Env()
 env.read_env()
 
+
+def api_url(service: str = "IPublishedFileService",
+            function: str = "QueryFiles",
+            version: str = "v1") -> str:
+    """
+    Builds a steam web API url.
+    :param service: The steam service to attach to.
+    :param function: The function to call.
+    :param version: The API version.
+    :return: The built URL.
+    """
+    return "https://api.steampowered.com/%s/%s/%s/" % (
+        service, function, version
+    )
+
+
 with env.prefixed("STEAM_"):
     key = env.str("API_KEY")
     blacklist = set(env.list("BLACKLIST"))
@@ -17,22 +33,24 @@ with env.prefixed("STEAM_"):
 def search(text="", app=4000, perpage=20, cursor="*"):
     while cursor:
         print("Cursor: {}".format(cursor))
-        resp = get(url="https://api.steampowered.com/IPublishedFileService/QueryFiles/v1/", params={
-            "key": key,
-            "input_json": dumps({
-                "cursor": cursor,
-                "numperpage": perpage,
-                "creator_appid": app,
-                "appid": app,
-                "search_text": text,
-                "return_children": True,
-                "return_short_description": True,
-                "requiredtags": "Addon",
-                "required_flags": "Addon",
-                "ids_only": False,
-                "return_metadata": True
+        resp = get(
+            url="https://api.steampowered.com/IPublishedFileService/QueryFiles/v1/",
+            params={
+                "key": key,
+                "input_json": dumps({
+                    "cursor": cursor,
+                    "numperpage": perpage,
+                    "creator_appid": app,
+                    "appid": app,
+                    "search_text": text,
+                    "return_children": True,
+                    "return_short_description": True,
+                    "requiredtags": "Addon",
+                    "required_flags": "Addon",
+                    "ids_only": False,
+                    "return_metadata": True
+                })
             })
-        })
 
         try:
             resp = resp.json()['response']
@@ -52,10 +70,12 @@ def search(text="", app=4000, perpage=20, cursor="*"):
 
 
 def query(file):
-    resp = post(url="https://api.steampowered.com/ISteamRemoteStorage/GetPublishedFileDetails/v1/", data={
-        "itemcount": 1,
-        "publishedfileids[0]": file
-    })
+    resp = post(
+        url="https://api.steampowered.com/ISteamRemoteStorage/GetPublishedFileDetails/v1/",
+        data={
+            "itemcount": 1,
+            "publishedfileids[0]": file
+        })
 
     try:
         resp = resp.json()['response']
@@ -79,10 +99,12 @@ def download(url, fi):
 
 
 def author(sid):
-    resp = get(url="https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/", params={
-        "key": key,
-        "steamids": sid
-    })
+    resp = get(
+        url="https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
+        params={
+            "key": key,
+            "steamids": sid
+        })
 
     try:
         resp = resp.json()['response']
