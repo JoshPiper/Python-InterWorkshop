@@ -1,5 +1,3 @@
-from functools import partial
-
 from . import BaseSteamAPIService
 
 
