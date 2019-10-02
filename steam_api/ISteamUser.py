@@ -1,3 +1,5 @@
+from functools import partial
+
 from . import BaseSteamAPIService
 
 
@@ -57,6 +59,24 @@ class ISteamUserAPI(BaseSteamAPIService):
             ),
             'version': 'v1',
             'datakey': 'response'
+        },
+        'ResolveVanityURL': {
+            'args': (
+                ('vanityurl', True),
+                ('url_type', False),
+            ),
+            'version': 'v1',
+            'datakey': 'response'
         }
     }
 
+    def GrantPackage(self, *args, **kwargs):
+        query = {}
+        fetch = partial(self.getargtobj, query, 'GrantPackage', args, kwargs)
+        fetch(0, 'steamid', True, None)
+        fetch(1, 'packageid', True, None)
+        fetch(2, 'ipaddress', True, None)
+        fetch(3, 'thirdpartykey', False, None)
+        fetch(4, 'thirdpartyappid', 'thirdpartykey' in query, None)
+
+        return self.authquery('post', 'GrantPackage', query)
