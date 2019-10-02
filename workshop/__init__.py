@@ -4,7 +4,7 @@ from os import rename
 from environs import Env
 from requests import get, post
 from lzma import LZMADecompressor
-from json import dumps
+from json import dumps, JSONDecodeError
 
 env = Env()
 env.read_env()
@@ -34,7 +34,7 @@ def search(text="", app=4000, perpage=20, cursor="*"):
     while cursor:
         print("Cursor: {}".format(cursor))
         resp = get(
-            url="https://api.steampowered.com/IPublishedFileService/QueryFiles/v1/",
+            url=api_url(),
             params={
                 "key": key,
                 "input_json": dumps({
@@ -54,12 +54,12 @@ def search(text="", app=4000, perpage=20, cursor="*"):
 
         try:
             resp = resp.json()['response']
-        except Exception:
+        except JSONDecodeError:
             print(resp.headers)
             print(resp.text)
-            exit()
+            exit(1)
 
-        if not 'publishedfiledetails' in resp:
+        if 'publishedfiledetails' not in resp:
             return
 
         files = [x for x in resp['publishedfiledetails'] if x['result'] == 1]
@@ -71,7 +71,7 @@ def search(text="", app=4000, perpage=20, cursor="*"):
 
 def query(file):
     resp = post(
-        url="https://api.steampowered.com/ISteamRemoteStorage/GetPublishedFileDetails/v1/",
+        url=api_url('ISteamRemoteStorage', 'GetPublishedFileDetails'),
         data={
             "itemcount": 1,
             "publishedfileids[0]": file
