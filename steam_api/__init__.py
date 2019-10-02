@@ -70,25 +70,33 @@ class BaseSteamAPIService(BaseAPIService):
 
         return self.query(verb, (method, version), query, params)
 
+    def getarg(self, method, args, kwargs, idx, arg, required, default):
+        value = default
+        if idx is not None and idx < len(args):
+            value = args[idx]
+        if arg is not None and arg in kwargs:
+            value = kwargs[arg]
+        if required and value is None:
+            raise APIException("Missing required argument '%s' for '%s'"
+                               % (arg, method))
+        return (arg, value)
+
+    def getargtobj(self, obj, method, args, kwargs, idx, arg, required, default):
+        key, value = self.getarg(method, args, kwargs, idx, arg, required, default)
+        if value is not None:
+            obj[key] = value
+
+        return obj
+
     def autoquery(self, method, *args, **kwargs):
         data = self.autoMethods[method]
-        query = {}
 
-        for idx, arg, req, default in data['args']:
-            value = default
-            if idx is not None and idx < len(args):
-                value = args[idx]
-            if arg is not None and arg in kwargs:
-                value = kwargs[arg]
-            if req and value is None:
-                raise APIException("Missing required argument '%s' for '%s'"
-                                   % (arg, method))
-            if value is not None:
-                query[arg] = value
+        query = {}
+        fetch = partial(self.getargtobj, query, method, args, kwargs)
+        for x in data['args']:
+            fetch(*x)
 
         res = self.authquery(data['verb'], method, query, data['version'])
-        if res.status_code == 403:
-            raise APIException('Status Code 403 returned. Check API key.')
 
         if 'datakey' in data:
             returned = res.json()
