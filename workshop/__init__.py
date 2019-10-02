@@ -112,6 +112,11 @@ def download(url, fi):
 
 
 def author(sid):
+    """
+    Fetch a user's steam summary by 64bit steamid.
+    :param sid:
+    :return:
+    """
     resp = get(
         url=api_url('ISteamUser', 'GetPlayerSummaries', 'v2'),
         params={
@@ -121,7 +126,7 @@ def author(sid):
 
     try:
         resp = resp.json()['response']
-    except Exception:
+    except JSONDecodeError:
         print(resp.headers)
         print(resp.text)
         exit()
