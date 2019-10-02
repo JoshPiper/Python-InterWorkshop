@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='InterWorkshop',
     version='1.0.0.dev1',
-    packages=['gmad', 'workshop'],
+    packages=['gmad', 'legacy_workshop', 'api', 'steam_api'],
     url='doctor-internet.dev',
     license='MIT',
     author='John Internet',
