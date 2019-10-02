@@ -52,6 +52,3 @@ class BaseAPIService:
             return partial(self.query, item)
         else:
             raise APIException("Bad method requested.")
-
-    def __call__(self, *args, **kwargs):
-        return self.get(*args)
