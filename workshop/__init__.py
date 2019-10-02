@@ -100,7 +100,7 @@ def download(url, fi):
 
 def author(sid):
     resp = get(
-        url="https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
+        url=api_url('ISteamUser', 'GetPlayerSummaries', 'v2'),
         params={
             "key": key,
             "steamids": sid
