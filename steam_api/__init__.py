@@ -93,13 +93,17 @@ class BaseSteamAPIService(BaseAPIService):
 
         return obj
 
-    def autoquery(self, method, *args, **kwargs):
-        data = self.autoMethods[method]
-
+    def getargs(self, method, args, kwargs):
         query = {}
+        data = self.autoMethods[method]
         fetch = partial(self.getargtobj, query, method, args, kwargs)
         for x in data['args']:
             fetch(*x)
+        return query
+
+    def autoquery(self, method, *args, **kwargs):
+        data = self.autoMethods[method]
+        query = self.getargs(method, args, kwargs)
 
         if self.isService:
             query = {'input_json': dumps(query)}
