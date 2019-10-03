@@ -23,8 +23,20 @@ class IPublishedFileServiceAPI(BaseSteamAPIService):
                 ('return_short_description', False, True),
                 ('return_for_sale_data', False, True),
                 ('return_metadata', False, False),
+                ('numperpage', False, 20),
             ),
             'version': 'v1',
             'datakey': 'response'
         },
     }
+
+    def QueryFileIterator(self, *args, **kwargs):
+        data = self.autoMethods['QueryFiles']
+        query = self.getargs('QueryFiles', args, kwargs)
+
+        res = self.authquery('get', 'QueryFiles', query).json()['response']
+        while 'publishedfiledetails' in res:
+            for file in res['publishedfiledetails']:
+                yield file
+            query['cursor'] = res['next_cursor']
+            res = self.authquery('get', 'QueryFiles', query).json()['response']
