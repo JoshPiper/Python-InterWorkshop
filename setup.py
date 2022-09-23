@@ -16,7 +16,7 @@ setup(
         'environs==5.2.1',
         'idna==2.8',
         'marshmallow==2.20.1',
-        'protobuf==3.15.0',
+        'protobuf==3.18.3',
         'python-dotenv==0.10.3',
         'requests==2.22.0',
         'six==1.12.0',
