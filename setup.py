@@ -18,7 +18,7 @@ setup(
         'marshmallow==2.20.1',
         'protobuf==3.18.3',
         'python-dotenv==0.10.3',
-        'requests==2.22.0',
+        'requests==2.31.0',
         'six==1.12.0',
         'urllib3==1.26.5'
     ]
