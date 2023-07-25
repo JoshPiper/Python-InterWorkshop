@@ -10,7 +10,7 @@ setup(
     author_email='jonjon1234.github@gmail.com',
     description='A Python binding for the Steam Workshop API',
     install_requires=[
-        'certifi==2022.12.7',
+        'certifi==2023.7.22',
         'chardet==3.0.4',
         'discord-webhook==0.4.1',
         'environs==5.2.1',
