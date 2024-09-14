@@ -14,7 +14,7 @@ setup(
         'chardet==3.0.4',
         'discord-webhook==0.4.1',
         'environs==5.2.1',
-        'idna==2.8',
+        'idna==3.7',
         'marshmallow==2.20.1',
         'protobuf==3.18.3',
         'python-dotenv==0.10.3',
