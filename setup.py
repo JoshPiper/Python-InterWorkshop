@@ -20,6 +20,6 @@ setup(
         'python-dotenv==0.10.3',
         'requests==2.32.4',
         'six==1.12.0',
-        'urllib3==1.26.19'
+        'urllib3==2.5.0'
     ]
 )
